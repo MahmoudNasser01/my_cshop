@@ -1,0 +1,21 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="CssInvalidPseudoSelector" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="TYPO" enabled_by_default="false" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="TYPO" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="seaborn" />
+          <option value="main.square_sum" />
+          <option value="mysql.*" />
+          <option value="MySQLdb" />
+          <option value="admin.admin.urls.django" />
+          <option value="HIS.HospitalInformationSystem.myhis.controller.patient_api.myhis" />
+          <option value="HIS.HospitalInformationSystem.rest_auth.authorization.*" />
+          <option value="myproject.mulite.serializers.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
