@@ -77,3 +77,21 @@ class SectionDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Sections.objects.filter(user=self.request.user)
 
     serializer_class = SectionSerializer
+
+class ProductListCreateView(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsSellerUser]
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsWorkShopUser]
+    queryset = Products.objects.all()
+
+    def get_queryset(self):
+        return Sections.objects.filter(user=self.request.user)
+
+
+    serializer_class = ProductSerializer
+
