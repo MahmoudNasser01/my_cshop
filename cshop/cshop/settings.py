@@ -13,6 +13,10 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import environ
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fhyt*czp9vgbkl#77#g2b4v6m2frzqvm*s4+0d$ke!p+un)ci1'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,7 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+"django.contrib.gis",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,12 +57,19 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
 
+
     #apps
     'users',
     'cardb',
-
+    'cart',
+"leaflet",
 
 ]
+
+
+
+
+
 
 
 MIDDLEWARE = [
@@ -96,24 +107,33 @@ WSGI_APPLICATION = 'cshop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+GDAL_LIBRARY_PATH = r'D:\geodiango\bin\gdal308.dll'
+GEOS_LIBRARY_PATH = r'D:\geodiango\bin\geos_c.dll'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-
-        'OPTIONS': {
-
-            'init_command': 'SET default_storage_engine=INNODB',
-
-        },
-        'NAME': 'cardb',
-        'USER': 'root',
-
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
     }
 }
+
+
+LEAFLET_CONFIG = {
+    # "SPATIAL_EXTENT": (5.0, 44.0, 7.5, 46),
+    "DEFAULT_CENTER": (13.38885,564654.65), #set your corordinate
+    "DEFAULT_ZOOM": 16,
+    "MIN_ZOOM": 3,
+    "MAX_ZOOM": 20,
+    "DEFAULT_PRECISION": 6,
+    "SCALE": "both",
+    "ATTRIBUTION_PREFIX": "powered by me",
+}
+
+
+
 AUTH_USER_MODEL = 'users.User'
 
 # rest framework

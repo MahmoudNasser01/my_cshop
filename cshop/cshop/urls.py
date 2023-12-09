@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(('users/'), include('users.urls')),
 path(('cshop/'), include('cardb.url')),
+path(('cart/'), include('cart.urls')),
 
 path('password-reset/', PasswordResetView.as_view()),
     path('password-reset-confirm/<uidb64>/<token>/',
