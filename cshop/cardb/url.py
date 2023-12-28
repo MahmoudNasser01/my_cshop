@@ -7,7 +7,7 @@ from .views import (
     CarDetailsListCreateView, CarDetailsDetailView, SectionListCreateView, SectionListCreateViewworkshop,
     SectionDetailView, OrderDetailView, OrderListCreateView, DeliveryListCreateView,
     ProductListCreateView, ProductDetailView,
-    ProductListCreateViewwork,
+    ProductListCreateViewwork,DeliveryList_workshop,DeliveryDetailView
 )
 
 urlpatterns = [
@@ -27,8 +27,8 @@ urlpatterns = [
     path('order/', OrderListCreateView.as_view(), name='order-list'),
     path('order/<int:pk>/', OrderDetailView.as_view(), name='order-detail'),
     path('delivery/', DeliveryListCreateView.as_view(), name='delivery-list'),
-
-
+    path('deliveryworkshop/', DeliveryList_workshop.as_view(), name='deliverywork-list'),
+    path('deliveryworkshop/<int:pk>/', DeliveryDetailView.as_view(), name='delivery-detail'),
 
 
 ]

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -8,24 +9,27 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser, PermissionsMixin):
     class Types(models.TextChoices):
         SELLER = "SELLER", "Seller"
-        WORKSOHP= "WORKSHOP", "Workshop"
+        WORKSOHP = "WORKSHOP", "Workshop"
 
         DRIVER = "DRIVER", "Driver"
         ADMIN = "ADMIN", "ADMIN"
-
 
     base_type = Types.ADMIN
 
     # What type of user are we?
     type = models.CharField(
-        _("Type"), max_length=50, choices=Types.choices, default=base_type , null=True, blank=True
+        _("Type"), max_length=50, choices=Types.choices, default=base_type, null=True, blank=True
     )
 
-    # First Name and Last Name Do Not Cover Name Patterns
-    # Around the Globe.
+    # Name of User
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
 
+    # Phone number field with validation
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Please enter a valid phone number")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, unique=True)
 
+    USERNAME_FIELD = 'phone_number'
+    EMAIL_FIELD = 'phone_number'  # Set EMAIL_FIELD to the same as USERNAME_FIELD
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -37,7 +41,6 @@ class User(AbstractUser, PermissionsMixin):
             self.type = self.base_type
 
         return super().save(*args, **kwargs)
-
 
 class SELLERMANGER(models.Manager):
     def normalize_email(self, email):

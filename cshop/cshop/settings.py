@@ -122,8 +122,9 @@ DATABASES = {
 
 
 LEAFLET_CONFIG = {
-    # "SPATIAL_EXTENT": (5.0, 44.0, 7.5, 46),
-    "DEFAULT_CENTER": (13.38885,564654.65), #set your corordinate
+
+    "SPATIAL_EXTENT": (46.5, 30.25, 48.5, 31.75),
+    "DEFAULT_CENTER": (47.5, 30.5),
     "DEFAULT_ZOOM": 16,
     "MIN_ZOOM": 3,
     "MAX_ZOOM": 20,
@@ -159,16 +160,18 @@ REST_USE_JWT = True
 
 JWT_AUTH_COOKIE = 'my-app-auth'
 
-
 AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+
+   # 'allauth.account.auth_backends.AuthenticationBackend',
+
+ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # or 'optional' if you want optional email verification
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+
 LOGIN_URL = 'http://localhost:8000/users/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

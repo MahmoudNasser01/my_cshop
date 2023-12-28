@@ -17,4 +17,8 @@ admin.site.register(Sections)
 admin.site.register(Products)
 admin.site.register(Order)
 
-admin.site.register(Delivery)
+
+
+@admin.register(Delivery)
+class HotelAdmin(LeafletGeoAdmin):
+   pass

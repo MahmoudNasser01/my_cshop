@@ -1,5 +1,6 @@
 
 from dj_rest_auth.models import TokenModel
+from dj_rest_auth.serializers import LoginSerializer
 
 from rest_framework import serializers
 
@@ -24,11 +25,13 @@ def create_serializer(model):
     class DynamicSerializer(serializers.ModelSerializer):
         class Meta:
             model = self
-            fields = '__all__'
+            fields = ['phone_number', 'name', 'username', 'is_staff']
     return DynamicSerializer
 
+class CustomLoginSerializer(LoginSerializer):
 
 
+    email = None
 DriverSerializer = create_serializer(Driver)
 SellerSerializer = create_serializer(Seller)
 WorkshopSerializer = create_serializer(Workshop)
