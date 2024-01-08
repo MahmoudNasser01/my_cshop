@@ -107,8 +107,8 @@ WSGI_APPLICATION = 'cshop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-GDAL_LIBRARY_PATH = r'D:\geodiango\bin\gdal308.dll'
-GEOS_LIBRARY_PATH = r'D:\geodiango\bin\geos_c.dll'
+GDAL_LIBRARY_PATH = r'D:\geo\bin\gdal308.dll'
+GEOS_LIBRARY_PATH = r'D:\geo\bin\geos_c.dll'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
