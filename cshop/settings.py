@@ -14,13 +14,12 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import environ
+
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env()
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,44 +32,32 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
-"django.contrib.gis",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
 
-
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #leabiry
+    # leabiry
     'rest_framework',
     'rest_framework.authtoken',
-# dj - rest - auth
-'django.contrib.sites',
+    # dj - rest - auth
+    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
-
-
-    #apps
+    # apps
     'users',
     'cardb',
     'cart',
-"leaflet",
 
 ]
-
-
-
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,8 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-'corsheaders.middleware.CorsMiddleware',
-'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'cshop.urls'
@@ -104,48 +91,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cshop.wsgi.application'
 
+if os.environ.get('ENV', None) == 'development':
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        },
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-GDAL_LIBRARY_PATH = r'D:\geo\bin\gdal308.dll'
-GEOS_LIBRARY_PATH = r'D:\geo\bin\geos_c.dll'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
     }
-}
-
-
-LEAFLET_CONFIG = {
-
-    "SPATIAL_EXTENT": (46.5, 30.25, 48.5, 31.75),
-    "DEFAULT_CENTER": (47.5, 30.5),
-    "DEFAULT_ZOOM": 16,
-    "MIN_ZOOM": 3,
-    "MAX_ZOOM": 20,
-    "DEFAULT_PRECISION": 6,
-    "SCALE": "both",
-    "ATTRIBUTION_PREFIX": "powered by me",
-}
-
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.post',
+            'NAME': env("DB_NAME"),
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"),
+            'PORT': env("DB_PORT"),
+        }
+    }
 
 AUTH_USER_MODEL = 'users.User'
 
 # rest framework
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-
-
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-
-
-    ]
 
 }
 REST_AUTH_REGISTER_SERIALIZERS = {
@@ -164,8 +133,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-
-   # 'allauth.account.auth_backends.AuthenticationBackend',
+# 'allauth.account.auth_backends.AuthenticationBackend',
 
 ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
 ACCOUNT_EMAIL_REQUIRED = False
@@ -174,12 +142,10 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 
 LOGIN_URL = 'http://localhost:8000/users/login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mohammedabdullahyousef21@gmail.com'
-EMAIL_HOST_PASSWORD = 'Kdkdje73  kdoe838ru'
-EMAIL_PORT = 587
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -199,7 +165,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -210,7 +175,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -223,5 +187,3 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-

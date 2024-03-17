@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 # Register your model here.
-from leaflet.admin import LeafletGeoAdmin
 
 from .models import CountryCar, CompanyCar, CarName, \
     carmodel, Sections, Products, Order, Delivery
@@ -16,9 +15,3 @@ admin.site.register(carmodel)
 admin.site.register(Sections)
 admin.site.register(Products)
 admin.site.register(Order)
-
-
-
-@admin.register(Delivery)
-class HotelAdmin(LeafletGeoAdmin):
-   pass

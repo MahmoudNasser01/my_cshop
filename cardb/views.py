@@ -1,5 +1,4 @@
 # Create your views here.
-from django.contrib.gis.geos import Point
 from geopy import Nominatim
 from rest_framework import generics, viewsets, permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -158,9 +157,8 @@ class DeliveryListCreateView(generics.ListCreateAPIView):
         g = geolocator.geocode(address)
         lat = g.latitude
         lng = g.longitude
-        pnt = Point(lng, lat)
-        print(pnt)
-        serializer.save(location=pnt)
+
+        serializer.save()
 
 class DeliveryList_workshop(generics.ListCreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]

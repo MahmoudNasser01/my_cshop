@@ -1,7 +1,5 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.contrib.gis.db import models as geomodels
-# Create your model here.
 from django.utils.text import slugify
 from users.models import User
 
@@ -13,14 +11,15 @@ class MyModel(models.Model):
 class CountryCar(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=2)
+
     def __str__(self):
         return self.name
+
 
 # create company car one-to many conutrycar
 class CompanyCar(models.Model):
     name = models.CharField(max_length=100)
     countrycar = models.ForeignKey(CountryCar, on_delete=models.CASCADE)
-
 
     def __str__(self):
         return self.name
@@ -31,21 +30,19 @@ class carmodel(models.Model):
     manufacturer = models.ForeignKey(CompanyCar, on_delete=models.CASCADE)
 
 
-
 # create car name one-to-many companycar
 class CarName(models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
     companycar = models.ForeignKey(CompanyCar, on_delete=models.CASCADE)
-    year=models.ForeignKey(carmodel,on_delete=models.CASCADE)
-    price=models.IntegerField()
+    year = models.ForeignKey(carmodel, on_delete=models.CASCADE)
+    price = models.IntegerField()
     color = models.CharField(max_length=50)
     fuel_type = models.CharField(max_length=50)
+
     def __str__(self):
         return self.name
-
 
 
 # in this i will create Sections and Products for work shop
@@ -58,12 +55,10 @@ class Sections(models.Model):
         return self.name
 
 
-
 class Products(models.Model):
     section = models.ForeignKey(Sections, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-
 
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     is_available = models.BooleanField(default=True)
@@ -75,15 +70,14 @@ class Products(models.Model):
     slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-
         self.user = self.section.user
         super().save(*args, **kwargs)
-
 
     def __str__(self):
         return self.name
 
-#create order
+
+# create order
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -92,7 +86,6 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
     def save(self, *args, **kwargs):
         # Calculate total price before saving the order
 
@@ -100,10 +93,9 @@ class Order(models.Model):
 
         super().save(*args, **kwargs)
 
-
-
     def __str__(self):
         return self.product.name
+
 
 class Delivery(models.Model):
     DELIVERY_TYPES = [
@@ -120,23 +112,21 @@ class Delivery(models.Model):
     delivery_type = models.CharField(max_length=20, choices=DELIVERY_TYPES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')  # Default to 'موجل'
 
-
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     address = models.CharField(max_length=255)
-    location = geomodels.PointField(null=True,)
     orders = models.ManyToManyField('Order', related_name='deliveries')
     slug = models.SlugField(max_length=100, unique=True, blank=True)
-    order_bollen=models.BooleanField(default=False)
+    order_bollen = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.phone)
         super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.name}'s {self.delivery_type} Delivery"
 
 
 class add_delvery(models.Model):
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)
-
