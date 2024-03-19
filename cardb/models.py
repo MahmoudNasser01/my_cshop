@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 from users.models import User
+from django_resized import ResizedImageField
 
 
 class MyModel(models.Model):
@@ -60,7 +61,8 @@ class Products(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
 
-    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    image = ResizedImageField(scale=0.5, quality=75,upload_to='products_gallery/')
+
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
