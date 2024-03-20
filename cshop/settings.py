@@ -102,7 +102,7 @@ if os.environ.get('ENV', None) == 'development':
     }
 else:
     DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URI")),
     }
 
 AUTH_USER_MODEL = 'users.User'
