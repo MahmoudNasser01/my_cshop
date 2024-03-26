@@ -5,13 +5,15 @@ from rest_framework import viewsets, status
 from dj_rest_auth.views import LoginView
 
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 from .Serializer import DriverSerializer, SellerSerializer, WorkshopSerializer, CustomerSerializer, \
-    CustomTokenSerializer, CustomLoginSerializer
+    CustomTokenSerializer, CustomLoginSerializer,SellerMoreSerializer,DriverMoreSerializer,WorkshopMoreSerializer
 
-from .models import Driver,Seller,Workshop,Customer
-
+from .models import Driver, Seller, Workshop, Customer, SellerMore, DriverMore, WorkshopMore
+from cardb.views import IsSellerUser, IsDRIVERUser, IsWorkShopUser
 
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
@@ -62,3 +64,21 @@ class CustomLoginView(LoginView):
             response.renderer_context = {}
 
         return response
+
+class SellerMoreViewSet(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsSellerUser]
+    queryset = SellerMore.objects.all()
+    serializer_class = SellerMoreSerializer
+
+class DriverMoreViewSet(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+    queryset = DriverMore.objects.all()
+    serializer_class = DriverMoreSerializer
+
+class WorkshopMoreViewSet(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsWorkShopUser]
+    queryset = WorkshopMore.objects.all()
+    serializer_class = WorkshopMoreSerializer

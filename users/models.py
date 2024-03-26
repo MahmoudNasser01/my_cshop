@@ -118,22 +118,40 @@ class COUSTEMManager(models.Manager):
 class DriverMore(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,)
     name=models.CharField(max_length=100)
-    phone=models.CharField(max_length=11)
+    phone=models.CharField(max_length=13)
     address=models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        # Set the name of the SellerMore instance to the name of the associated User
+        self.name = self.user.name
+        self.phone = self.user.phone_number
+        super().save(*args, **kwargs)
 
 class SellerMore(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
-    phone=models.IntegerField()
+    phone=models.CharField(max_length=20)
     address=models.CharField(max_length=100)
     car=models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        # Set the name of the SellerMore instance to the name of the associated User
+        self.name = self.user.name
+        self.phone = self.user.phone_number
+        super().save(*args, **kwargs)
 
 class WorkshopMore(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
-    phone=models.IntegerField()
+    phone=models.CharField(max_length=20)
     address=models.CharField(max_length=100)
     cartypes=models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        # Set the name of the SellerMore instance to the name of the associated User
+        self.name = self.user.name
+        self.phone = self.user.phone_number
+        super().save(*args, **kwargs)
 
 
 

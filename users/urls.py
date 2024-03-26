@@ -6,14 +6,26 @@ from dj_rest_auth.views import LoginView, LogoutView
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import DriverViewSet, SellerViewSet, WorkshopViewSet, CustomerViewSet, CustomLoginView
+from .views import DriverViewSet, SellerViewSet, WorkshopViewSet, CustomerViewSet, CustomLoginView, SellerMoreViewSet, \
+    DriverMoreViewSet, WorkshopMoreViewSet
+
+
 
 router = routers.DefaultRouter()
 router.register(r'drivers', DriverViewSet)
+router.register(r'driversmore', DriverMoreViewSet)
 router.register(r'sellers', SellerViewSet)
+router.register(r'sellersmore', SellerMoreViewSet)
 router.register(r'workshops', WorkshopViewSet)
+router.register(r'workshopsmore', WorkshopMoreViewSet)
+
 router.register(r'customers', CustomerViewSet)
+
+
+
+
 urlpatterns = [
+
 path('account-confirm-email/<str:key>/', ConfirmEmailView.as_view()),
     #path('register/', RegisterView.as_view()),
 

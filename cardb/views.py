@@ -1,13 +1,16 @@
 # Create your views here.
+import self as self
 from geopy import Nominatim
 from rest_framework import generics, viewsets, permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from .models import CountryCar, CompanyCar, Order, carmodel, CarName, Sections, Products, Delivery
+from .models import CountryCar, CompanyCar, Order, carmodel, CarName, Sections, Products, Delivery, add_delvery
 from .Serializer import CarDetailsSerializer, CarModelSerializer, CountrySerializer, ManufacturerSerializer, \
     SectionSerializer, DeliverySerializer_write, \
-    ProductSerializer, OrderSerializer, DeliverySerializer, DeliverySerializer_workshop, OrderSerializer_read
+    AddDelivery_driver, \
+    Delivery_driver, Delivery_driver_read, ProductSerializer, OrderSerializer, DeliverySerializer, \
+    DeliverySerializer_workshop, OrderSerializer_read, AddDelivery_driver_read, AddDelivery_driver_status
 
 
 class IsSellerUser(permissions.BasePermission):
@@ -23,6 +26,12 @@ class IsWorkShopUser(permissions.BasePermission):
     def has_permission(self, request, view):
         # Check if the user is authenticated and is of type 'WORKSHOP'
         return request.user.is_authenticated and request.user.type == 'WORKSHOP'
+
+class IsDRIVERUser(permissions.BasePermission):
+    message = "You do not have permission to access this resource."
+    def has_permission(self, request, view):
+        # Check if the user is authenticated and is of type 'DELIVERY'
+        return request.user.is_authenticated and request.user.type == 'DRIVER'
 
 
 class CountryListCreateView(viewsets.ReadOnlyModelViewSet):
@@ -172,7 +181,7 @@ class DeliveryList_workshop(generics.ListCreateAPIView):
         # Filter deliveries based on conditions
         queryset = Delivery.objects.filter(
             orders__product__user=self.request.user,
-            status='active'
+
         )
         return queryset
 
@@ -195,7 +204,7 @@ class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
         # Filter deliveries based on conditions
         queryset = Delivery.objects.filter(
             orders__product__user=self.request.user,
-            status='active'
+
         )
         return queryset
 
@@ -204,9 +213,138 @@ class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(user=self.request.user)
 
 
+#
+class Delivery_driverview(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+    queryset = Delivery.objects.queryset = Delivery.objects.filter(order_bollen=True)
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            # Use OrderCreateSerializer for POST requests (creation)
+            return Delivery_driver
+        else:
+            # Use OrderListSerializer for GET requests (listing)
+            return Delivery_driver_read
 
 
+class Delivery_driverlist(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+    queryset = Delivery.objects.filter(order_bollen=True)
+    serializer_class = Delivery_driver
+
+class Delivery_driverlist_rejected(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+    queryset = Delivery.objects.filter(order_bollen=True)
+    serializer_class = Delivery_driver
 
 
+class AddDeliveryView(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
 
+    queryset = add_delvery.objects.filter(delivery__order_bollen=True)
+
+    def get_queryset(self):
+        # Assuming you have a one-to-one relationship between Products and Users
+        # Adjust this based on your actual relationship
+
+        # Filter deliveries based on conditions
+        queryset = add_delvery.objects.filter(
+            delivery__order_bollen=True,
+            user=self.request.user,
+            status='active'
+        )
+        return queryset
+
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            # Use OrderCreateSerializer for POST requests (creation)
+            return AddDelivery_driver
+        else:
+            # Use OrderListSerializer for GET requests (listing)
+            return AddDelivery_driver_read
+
+class AddDeliveryView_edit_status(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+
+    queryset = add_delvery.objects.filter(delivery__order_bollen=True)
+
+    def get_queryset(self):
+        # Assuming you have a one-to-one relationship between Products and Users
+        # Adjust this based on your actual relationship
+
+        # Filter deliveries based on conditions
+        queryset = add_delvery.objects.filter(
+            delivery__order_bollen=True,
+            user=self.request.user,
+            status='active'
+        )
+        return queryset
+
+    serializer_class = AddDelivery_driver_status
+
+
+class AddDeliveryView_edit_pending(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+
+    queryset = add_delvery.objects.filter(delivery__order_bollen=True)
+
+    def get_queryset(self):
+        # Assuming you have a one-to-one relationship between Products and Users
+        # Adjust this based on your actual relationship
+
+        # Filter deliveries based on conditions
+        queryset = add_delvery.objects.filter(
+            delivery__order_bollen=True,
+            user=self.request.user,
+            status='pending'
+        )
+        return queryset
+
+    serializer_class =AddDelivery_driver_read
+
+class AddDeliveryView_edit_rejected(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+
+    queryset = add_delvery.objects.filter(delivery__order_bollen=True)
+
+    def get_queryset(self):
+        # Assuming you have a one-to-one relationship between Products and Users
+        # Adjust this based on your actual relationship
+
+        # Filter deliveries based on conditions
+        queryset = add_delvery.objects.filter(
+            delivery__order_bollen=True,
+            user=self.request.user,
+            status='rejected'
+        )
+        return queryset
+
+    serializer_class =AddDelivery_driver_read
+class AddDeliveryView_edit_completed(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsDRIVERUser]
+
+    queryset = add_delvery.objects.filter(delivery__order_bollen=True)
+
+    def get_queryset(self):
+        # Assuming you have a one-to-one relationship between Products and Users
+        # Adjust this based on your actual relationship
+
+        # Filter deliveries based on conditions
+        queryset = add_delvery.objects.filter(
+            delivery__order_bollen=True,
+            user=self.request.user,
+            status='completed'
+        )
+        return queryset
+
+    serializer_class =AddDelivery_driver_read
 
