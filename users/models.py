@@ -13,6 +13,7 @@ class User(AbstractUser, PermissionsMixin):
 
         DRIVER = "DRIVER", "Driver"
         ADMIN = "ADMIN", "ADMIN"
+        BLOCK="BLOCK","Block"
 
     base_type = Types.ADMIN
 
@@ -26,10 +27,13 @@ class User(AbstractUser, PermissionsMixin):
 
     # Phone number field with validation
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Please enter a valid phone number")
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, unique=True)
+    phone_number = models.CharField(validators=[phone_regex], max_length=12, blank=True, unique=True)
 
-    USERNAME_FIELD = 'phone_number'
-    EMAIL_FIELD = 'phone_number'  # Set EMAIL_FIELD to the same as USERNAME_FIELD
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+
+      # Set EMAIL_FIELD to the same as USERNAME_FIELD
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

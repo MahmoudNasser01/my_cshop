@@ -1,6 +1,7 @@
 
 from dj_rest_auth.models import TokenModel
 from dj_rest_auth.serializers import LoginSerializer
+from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
@@ -10,7 +11,7 @@ from .models import Driver,Seller,Workshop,Customer,User,WorkshopMore,DriverMore
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ( 'username', 'email')  # Add any additional fields you want to include
+        fields = ( 'username','email')  # Add any additional fields you want to include
 
 class CustomTokenSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()  # Include the custom user serializer
@@ -25,16 +26,35 @@ def create_serializer(model):
     class DynamicSerializer(serializers.ModelSerializer):
         class Meta:
             model = self
-            fields = ['phone_number', 'name', 'username', 'is_staff','password','is_superuser']
+            fields = ['phone_number', 'name', 'username', 'is_staff','password','is_superuser','email']
     return DynamicSerializer
 
 
 
 
 class CustomLoginSerializer(LoginSerializer):
+    username = None  # Remove the username field
+
+    # Add email field for login
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        # Validate email field
+        email = attrs.get('email')
+        if email:
+            user = get_user_model().objects.filter(email=email).first()
+            if user:
+                username = user.get_username()
+                attrs['username'] = username
+            else:
+                raise serializers.ValidationError("User with this email does not exist.")
+        else:
+            raise serializers.ValidationError("Email is required.")
+
+        # Call the parent class's validate method
+        return super().validate(attrs)
 
 
-    email = None
 DriverSerializer = create_serializer(Driver)
 SellerSerializer = create_serializer(Seller)
 WorkshopSerializer = create_serializer(Workshop)

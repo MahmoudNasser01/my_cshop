@@ -1,5 +1,6 @@
 
 # Create your views here.
+from django.views.decorators.csrf import csrf_exempt
 from requests import Response
 from rest_framework import viewsets, status
 from dj_rest_auth.views import LoginView
@@ -35,6 +36,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
 #create class login for this up and reuern tokne and email username
+
 class CustomLoginView(LoginView):
     serializer_class = CustomLoginSerializer
 
@@ -53,6 +55,7 @@ class CustomLoginView(LoginView):
             # Add user information and token to the response data
             response.data['user_id'] = user.id
             response.data['username'] = user.username
+
             response.data['phone_number'] = user.phone_number
             response.data['token'] = token.key
 

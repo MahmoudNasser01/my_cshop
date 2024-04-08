@@ -28,7 +28,7 @@ try:
         path('productsworkshop/<int:pk>/', ProductDetailView.as_view(), name='products-detail'),
         path('deliverydriver/', Delivery_driverview.as_view(), name='deliverydriver-list'),
         path('deliverydriver/<int:pk>/', Delivery_driverlist.as_view(), name='deliverydriver-detail'),
-        path('delivery/', AddDeliveryView.as_view(), name='add-delivery'),
+        path('deliveryadd/', AddDeliveryView.as_view(), name='add-delivery'),
         path('delivery/<int:pk>/', AddDeliveryView_edit_status.as_view(), name='edit-delivery'),
         path('delivery/rejected/', AddDeliveryView_edit_rejected.as_view(), name='edit-delivery-rejected'),
         path('delivery/completed/', AddDeliveryView_edit_completed.as_view(), name='edit-delivery-completed'),

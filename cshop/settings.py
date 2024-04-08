@@ -122,19 +122,18 @@ SITE_ID = 1
 REST_USE_JWT = True
 
 JWT_AUTH_COOKIE = 'my-app-auth'
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-# 'allauth.account.auth_backends.AuthenticationBackend',
-
-ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # or 'optional' if you want optional email verification
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
-
 LOGIN_URL = 'http://localhost:8000/users/login'
+
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
