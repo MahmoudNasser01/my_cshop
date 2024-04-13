@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
@@ -28,6 +30,7 @@ class User(AbstractUser, PermissionsMixin):
     # Phone number field with validation
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Please enter a valid phone number")
     phone_number = models.CharField(validators=[phone_regex], max_length=12, blank=True, unique=True)
+    username = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -43,7 +46,7 @@ class User(AbstractUser, PermissionsMixin):
             self.set_password(self.password)
         if not self.id:
             self.type = self.base_type
-
+        self.username = self.phone_number
         return super().save(*args, **kwargs)
 
 class SELLERMANGER(models.Manager):

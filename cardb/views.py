@@ -1,5 +1,3 @@
-# Create your views here.
-import self as self
 from geopy import Nominatim
 from rest_framework import generics, viewsets, permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
