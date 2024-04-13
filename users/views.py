@@ -10,6 +10,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
+from utils.fcm import get_or_create_user_device
 from .Serializer import DriverSerializer, SellerSerializer, WorkshopSerializer, CustomerSerializer, \
     CustomTokenSerializer, CustomLoginSerializer,SellerMoreSerializer,DriverMoreSerializer,WorkshopMoreSerializer
 
@@ -65,6 +66,11 @@ class CustomLoginView(LoginView):
             # Clear sensitive information from the response
             response.accepted_renderer = response.accepted_media_type = None
             response.renderer_context = {}
+
+            # create FCM device for the customer if it does not exist
+            get_or_create_user_device(user, request.data.get('registration_token', None))
+
+
 
         return response
 
