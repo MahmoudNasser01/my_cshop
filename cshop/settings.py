@@ -15,6 +15,8 @@ from pathlib import Path
 import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import environ
+import firebase_admin
+from firebase_admin import credentials
 
 # Initialise environment variables
 env = environ.Env()
@@ -223,3 +225,9 @@ FCM_DJANGO_SETTINGS = {
      # default: False
     "DELETE_INACTIVE_DEVICES": True,
 }
+
+# FCM settings
+PROJECT_APP = os.path.basename(BASE_DIR)
+cred = credentials.Certificate(os.path.join(PROJECT_APP, '../fcm-cred.json'))
+firebase_admin.initialize_app(cred)
+
